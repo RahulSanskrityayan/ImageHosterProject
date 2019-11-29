@@ -132,7 +132,6 @@ public class ImageController {
 
             updatedImage.setId(imageId);
             updatedImage.setTitle(updatedImage.getTitle());
-
             updatedImage.setUser(user);
             updatedImage.setTags(imageTags);
             updatedImage.setDate(new Date());
@@ -141,6 +140,7 @@ public class ImageController {
             return "redirect:/images/" + updatedImage.getId() + "/" + updatedImage.getTitle();
         } else{
             String error = "Only the owner of the image can edit the image";
+            model.addAttribute("image",image);
             model.addAttribute("editError", error);
             return "images/image";
         }
