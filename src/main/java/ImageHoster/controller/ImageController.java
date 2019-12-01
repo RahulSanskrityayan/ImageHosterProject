@@ -102,6 +102,8 @@ public class ImageController {
         return "images/edit";
     }
 
+
+
     //This controller method is called when the request pattern is of type 'images/edit' and also the incoming request is of PUT type
     //The method receives the imageFile, imageId, updated image, along with the Http Session
     //The method adds the new imageFile to the updated image if user updates the imageFile and adds the previous imageFile to the new updated image if user does not choose to update the imageFile
@@ -211,4 +213,5 @@ public class ImageController {
 
         return tagString.toString();
     }
+
 }
