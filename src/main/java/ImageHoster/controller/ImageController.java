@@ -103,7 +103,6 @@ public class ImageController {
     }
 
 
-
     //This controller method is called when the request pattern is of type 'images/edit' and also the incoming request is of PUT type
     //The method receives the imageFile, imageId, updated image, along with the Http Session
     //The method adds the new imageFile to the updated image if user updates the imageFile and adds the previous imageFile to the new updated image if user does not choose to update the imageFile
@@ -115,34 +114,32 @@ public class ImageController {
 
     //The method also receives tags parameter which is a string of all the tags separated by a comma using the annotation @RequestParam
     //The method converts the string to a list of all the tags using findOrCreateTags() method and sets the tags attribute of an image as a list of all the tags
+    //Added Logic to ensure only the Owner of the image can edit the Image by Fetching the image LoogedIn User from Http Session and Comparing it with the user of the image who has uploaded the image
+    // If User who uploaded the image is different with the User who is trying to edit the image generated error along with a error msg for User
     @RequestMapping(value = "/editImage", method = RequestMethod.PUT)
-    public String editImageSubmit(@RequestParam("file") MultipartFile file, @RequestParam("imageId") Integer imageId, @RequestParam("tags") String tags, Image updatedImage, HttpSession session,Model model) throws IOException {
+    public String editImageSubmit(@RequestParam("file") MultipartFile file, @RequestParam("imageId") Integer imageId, @RequestParam("tags") String tags, Image updatedImage, HttpSession session, Model model) throws IOException {
 
         Image image = imageService.getImage(imageId);
         User user = (User) session.getAttribute("loggeduser");
 
-        if (user.getId()==image.getUser().getId()) {
-
+        if (user.getId() == image.getUser().getId()) {
             String updatedImageData = convertUploadedFileToBase64(file);
             List<Tag> imageTags = findOrCreateTags(tags);
-
             if (updatedImageData.isEmpty())
                 updatedImage.setImageFile(image.getImageFile());
             else {
                 updatedImage.setImageFile(updatedImageData);
             }
-
             updatedImage.setId(imageId);
             updatedImage.setTitle(updatedImage.getTitle());
             updatedImage.setUser(user);
             updatedImage.setTags(imageTags);
             updatedImage.setDate(new Date());
-
             imageService.updateImage(updatedImage);
             return "redirect:/images/" + updatedImage.getId() + "/" + updatedImage.getTitle();
-        } else{
+        }   else {
             String error = "Only the owner of the image can edit the image";
-            model.addAttribute("image",image);
+            model.addAttribute("image", image);
             model.addAttribute("editError", error);
             return "images/image";
         }
@@ -152,25 +149,23 @@ public class ImageController {
     //This controller method is called when the request pattern is of type 'deleteImage' and also the incoming request is of DELETE type
     //The method calls the deleteImage() method in the business logic passing the id of the image to be deleted
     //Looks for a controller method with request mapping of type '/images'
+    //Added Logic to ensure only the Owner of the image can delete the Image by Fetching the image LoogedIn User from Http Session and Comparing it with the user of the image who has uploaded the image
+    // If User who uploaded the image is different with the User who is trying to delete the image generated error along with a error msg for User
     @RequestMapping(value = "/deleteImage", method = RequestMethod.DELETE)
-    public String deleteImageSubmit(@RequestParam(name = "imageId") Integer imageId,HttpSession session,Model model) {
+    public String deleteImageSubmit(@RequestParam(name = "imageId") Integer imageId, HttpSession session, Model model) {
 
         Image image = imageService.getImage(imageId);
         User user = (User) session.getAttribute("loggeduser");
-
-        if (user.getId()==image.getUser().getId()) {
+        if (user.getId() == image.getUser().getId()) {
             imageService.deleteImage(imageId);
             return "redirect:/images";
-    }
-        else{
+        } else {
             String error2 = "Only the owner of the image can delete the image";
-            model.addAttribute("image",image);
+            model.addAttribute("image", image);
             model.addAttribute("deleteError", error2);
             return "images/image";
-
         }
     }
-
 
     //This method converts the image to Base64 format
     private String convertUploadedFileToBase64(MultipartFile file) throws IOException {

@@ -2,7 +2,7 @@ package ImageHoster.model;
 import javax.persistence.*;
 import java.util.Date;
 
-
+//Added Comment Entity to persist the User Comment In Database
 @Entity
 @Table(name="Comment")
 public class Comment {
@@ -18,11 +18,12 @@ public class Comment {
     @Column(name = "date")
     private Date date;
 
+    //The relation between comment and User table is specified as ManyToOne i.e one User can post multiple comments but one comment should belong to one user itself
     @ManyToOne(fetch= FetchType.EAGER)
     @JoinColumn(name="user_id")
     private User user;
 
-
+    //The relation between comment and Image table is specified as ManyToOne i.e one Image can have multiple comments but one comment should belong to one image itself
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="image_id")
     private Image image;
@@ -66,7 +67,4 @@ public class Comment {
     public void setImage(Image image) {
         this.image = image;
     }
-
-
-
 }

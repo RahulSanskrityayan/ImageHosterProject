@@ -10,7 +10,8 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
-    public Comment setComment(Comment comment){
+    //The method calls the createComment() method in the Repository and passes the Comment to be updated in the database
+    public Comment setComment(Comment comment) {
         return commentRepository.createComment(comment);
     }
 }
