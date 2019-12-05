@@ -195,6 +195,7 @@ public class ImageControllerTest {
     @Test
     public void editImageWithNonOwnerOfTheImage() throws Exception {
         User user = new User();
+
         UserProfile userProfile = new UserProfile();
         userProfile.setId(1);
         userProfile.setEmailAddress("a@gmail.com");

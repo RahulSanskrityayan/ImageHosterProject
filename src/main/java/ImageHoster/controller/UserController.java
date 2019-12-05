@@ -46,7 +46,7 @@ public class UserController {
         String pattern = "^.*(?=.*[@#$%^&+=])(?=.*\\d)(?=.*[a-zA-Z]).*$";
         if (password.matches(pattern)) {
             userService.registerUser(user);
-            return "redirect:/users/login";
+            return "users/login";
         } else {
             String error = "Password must contain atleast 1 alphabet, 1 number & 1 special character";
             User newUser = new User();
